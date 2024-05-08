@@ -30,19 +30,20 @@ def calculate_demographic_data(print_data=True):
     lower_education_rich = round(lower_education.where(lower_education['salary'] == '>50K').dropna().shape[0] / lower_education.shape[0] * 100, 1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
-    min_work_hours = None
+    min_work_hours = data['hours-per-week'].min()
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
-    num_min_workers = None
+    num_min_workers = data.where(data['hours-per-week'] == min_work_hours).dropna()
 
-    rich_percentage = None
+    rich_percentage = round(num_min_workers.where(num_min_workers['salary'] == '>50K').dropna().shape[0] / num_min_workers.shape[0] * 100, 1)
 
     # What country has the highest percentage of people that earn >50K?
-    highest_earning_country = None
-    highest_earning_country_percentage = None
+    highest_earning_country = (data.where(data['salary'] == '>50K').dropna()['native-country'].value_counts()/ data['native-country'].value_counts() * 100).idxmax()
+    highest_earning_country_percentage = round((data.where(data['salary'] == '>50K').dropna()['native-country'].value_counts() / data['native-country'].value_counts() * 100), 1).max()
 
     # Identify the most popular occupation for those who earn >50K in India.
-    top_IN_occupation = None
+    top_IN_occupation = data.where((data['native-country'] == 'India') & (data['salary'] == '>50K')).dropna()['occupation'].value_counts().idxmax()
+    # print(data.where((data['native-country'] == 'India') & (data['salary'] == '>50K')).dropna()['occupation'].value_counts())
 
     # DO NOT MODIFY BELOW THIS LINE
 
